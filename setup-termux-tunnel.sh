@@ -45,7 +45,11 @@ pkill -f "http.server 8080" 2>/dev/null || true
 # Step 6: Start Python HTTP server in background
 echo ""
 echo "[6/6] Starting Python HTTP server on port 8080..."
-python -m http.server 8080 > /tmp/http-server.log 2>&1 &
+# Ensure a writable log directory exists. Some Termux setups don't have /tmp created.
+LOG_DIR="${TMPDIR:-/tmp}"
+mkdir -p "$LOG_DIR"
+
+python -m http.server 8080 > "$LOG_DIR/http-server.log" 2>&1 &
 HTTP_PID=$!
 sleep 2
 
